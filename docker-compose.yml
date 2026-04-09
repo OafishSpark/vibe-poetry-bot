@@ -1,0 +1,20 @@
+services:
+  bot:
+    build: .
+    image: performance-artist-bot
+    restart: unless-stopped          # auto-restart on crash or server reboot
+
+    # Secrets come from .env — never baked into the image
+    env_file:
+      - .env
+
+    volumes:
+      # Persist subscriber list across container restarts and rebuilds
+      - ./data/subscribers.json:/app/subscribers.json
+
+    # Optional: limit log size so the disk doesn't fill up
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
